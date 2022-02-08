@@ -1,5 +1,7 @@
 package com.geekylikes.app.controllers;
 
+import com.geekylikes.app.payloads.api.response.Article;
+import com.geekylikes.app.payloads.api.response.NewsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -43,20 +45,17 @@ public class TestController {
         return "admin content";
     }
 
-    @GetMapping("/news/{g}")
-    public ResponseEntity<?> getNewsArticles(@PathVariable String q){
-        String url = "https://newsapi.org/v2/everything?sortBy=popularity&apiKey=" + apiKey + "&q=" + q;
+    @GetMapping("/news/{q}")
+    public ResponseEntity<?> getNewsArticles(@PathVariable String q) {
+        String uri = "https://newsapi.org/v2/everything?sortBy=popularity&apiKey=" + apiKey + "&q=" + q;
 
-        class NewsResponse{
-            private String status;
-            private Integer totalResults;
-            private List<Article> articles;
+        NewsResponse response = restTemplate.getForObject(uri, NewsResponse.class);
 
-
-        }
-
-        NewsResponse response = restTemplate.getForObject(url, NewsResponse.class);
-
-        return ResponseEntity.ok(response)
+        return ResponseEntity.ok(response.getArticles());
     }
+
+//    @GetMapping("/newsCategory/{category}")
+//    public ResponseEntity<?> getArticlesByCategory() {
+//
+//    }
 }
